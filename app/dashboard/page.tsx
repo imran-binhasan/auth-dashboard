@@ -14,10 +14,10 @@ import { Badge } from '@/components/ui/badge';
 import { Mail, User } from 'lucide-react';
 
 export default async function DashboardPage() {
-  const token =  (await cookies()).get('auth-token');
+  const token = (await cookies()).get('auth-token');
   if (!token) redirect('/login');
 
-  const userId = 2; 
+  const userId = 2;
   let user;
   try {
     ({ data: user } = await fetchUser(userId));
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
           <LogoutButton />
         </div>
 
-
+        {/* User Profile Card */}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>User Profile</CardTitle>

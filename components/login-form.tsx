@@ -1,44 +1,39 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { login } from '@/app/actions/auth';
-
+import { useActionState } from "react";
+import { login } from "@/app/actions/auth";
+import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter
-} from '@/components/ui/card';
-
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? "Signing in…" : "Sign In"}
-    </Button>
-  );
-}
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle, Loader2 } from "lucide-react";
 
 export default function LoginForm() {
-  const [state, formAction] = useActionState(login, null);
+  const [state, formAction, isPending] = useActionState(login, null);
 
   return (
-    <Card className="w-full max-w-sm shadow-md">
-      <CardHeader>
-        <CardTitle className="text-2xl">Sign in to your account</CardTitle>
-        <CardDescription>Welcome back — we missed you!</CardDescription>
+    <Card className="w-full max-w-md">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
+        <CardDescription>
+          Enter your credentials to access your dashboard
+        </CardDescription>
       </CardHeader>
-
-      <form action={formAction}>
-        <CardContent className="space-y-4">
+      <CardContent>
+        <form action={formAction} className="space-y-4">
+          {state?.error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{state.error}</AlertDescription>
+            </Alert>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -46,9 +41,11 @@ export default function LoginForm() {
               id="email"
               name="email"
               type="email"
+              placeholder="eve.holt@reqres.in" 
+              defaultValue="eve.holt@reqres.in" 
               required
-              defaultValue="eve.holt@reqres.in"
-              placeholder="you@example.com"
+              disabled={isPending}
+              autoComplete="email"
             />
           </div>
 
@@ -58,24 +55,34 @@ export default function LoginForm() {
               id="password"
               name="password"
               type="password"
-              required
+              placeholder="cityslicka"
               defaultValue="cityslicka"
-              placeholder="Enter your password"
+              required
+              disabled={isPending}
+              autoComplete="current-password"
             />
           </div>
 
-          {state?.error && (
-            <Alert variant="destructive">
-              <AlertDescription>{state.error}</AlertDescription>
-            </Alert>
-          )}
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Signing in...
+              </>
+            ) : (
+              "Sign in"
+            )}
+          </Button>
 
-        </CardContent>
-
-        <CardFooter>
-          <SubmitButton />
-        </CardFooter>
-      </form>
+          <div className="text-sm text-muted-foreground text-center pt-2">
+            <p className="font-medium">Demo Credentials:</p>
+            <p className="text-xs mt-1">
+              Email: eve.holt@reqres.in <br />
+              Password: cityslicka
+            </p>
+          </div>
+        </form>
+      </CardContent>
     </Card>
   );
 }

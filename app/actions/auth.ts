@@ -19,7 +19,7 @@ export async function login(prevState: any, formData: FormData) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60 * 24, // 24 hours
       path: '/',
     });
   } catch (error) {
