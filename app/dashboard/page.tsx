@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { fetchUser } from '@/lib/api';
@@ -13,6 +14,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Mail, User } from 'lucide-react';
 
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "View and manage your account information",
+};
+
 export default async function DashboardPage() {
   const token = (await cookies()).get('auth-token');
   if (!token) redirect('/login');
@@ -21,7 +27,7 @@ export default async function DashboardPage() {
   let user;
   try {
     ({ data: user } = await fetchUser(userId));
-  } catch (err) {
+  } catch {
     redirect('/login');
   }
 

@@ -4,7 +4,14 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { loginUser } from '@/lib/api';
 
-export async function login(prevState: any, formData: FormData) {
+interface LoginState {
+  error?: string;
+}
+
+export async function login(
+  prevState: LoginState | null,
+  formData: FormData
+): Promise<LoginState> {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
